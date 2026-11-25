@@ -108,7 +108,7 @@ class MapaScreenState extends State<MapaScreen> {
 
     if (!mounted) return;
 
-    if (data.isNotEmpty || data is List) {
+    if (data.isNotEmpty) {
       setState(() {
         _actividades = data;
         _cargando = false;

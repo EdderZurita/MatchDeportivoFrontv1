@@ -1,9 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'https://matchdeportivo-back.onrender.com/api';
+  static const String baseUrl = 'https://matchdeportivo-back-staging.onrender.com/api'; // STAGING: no subir a produccion
   static const _storage = FlutterSecureStorage();
 
   // ==========================================

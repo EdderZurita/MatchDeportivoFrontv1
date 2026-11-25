@@ -283,9 +283,6 @@ class _PerfilAmigoScreenState extends State<PerfilAmigoScreen> {
             )
           else
             ..._historial.map((act) {
-              final fecha = DateTime.tryParse(act['fecha_hora'] ?? '');
-              final esPasada = act['estado'] == 'FINALIZADA' ||
-                  (fecha != null && fecha.isBefore(DateTime.now()));
               final bool esOrganizador = act['rol'] == 'ORGANIZADOR';
 
               return Card(
