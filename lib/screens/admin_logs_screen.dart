@@ -79,7 +79,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                 ? const Center(child: Text('No hay registros de actividad.'))
                 : ListView.separated(
               itemCount: _logs.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
+              separatorBuilder: (_, _) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final log = _logs[index];
                 final nivel = log['nivel'] ?? 'INFO';

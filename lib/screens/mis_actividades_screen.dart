@@ -380,7 +380,7 @@ class _MisActividadesScreenState extends State<MisActividadesScreen> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButton: FloatingActionButton.extended(heroTag: 'fab_mis_actividades',
           backgroundColor: Colors.deepOrange,
           foregroundColor: Colors.white,
           onPressed: () async {

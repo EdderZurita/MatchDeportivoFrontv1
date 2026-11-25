@@ -140,7 +140,7 @@ class _AdminUsuariosScreenState extends State<AdminUsuariosScreen> {
                 ? const Center(child: Text('No se encontraron usuarios.'))
                 : ListView.separated(
               itemCount: _usuarios.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
+              separatorBuilder: (_, _) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final u = _usuarios[index];
                 final bool activo = u['is_active'] ?? true;

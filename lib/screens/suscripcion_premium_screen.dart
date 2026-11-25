@@ -123,7 +123,6 @@ class _SuscripcionPremiumScreenState extends State<SuscripcionPremiumScreen>
   @override
   Widget build(BuildContext context) {
     final bool esPremium = _infoSuscripcion?['es_premium'] == true;
-    final String estado = _infoSuscripcion?['estado'] ?? 'SIN_PLAN';
 
     return Scaffold(
       appBar: AppBar(
@@ -157,7 +156,7 @@ class _SuscripcionPremiumScreenState extends State<SuscripcionPremiumScreen>
                 boxShadow: [
                   BoxShadow(
                     color: (esPremium ? Colors.deepOrange : Colors.black)
-                        .withOpacity(0.25),
+                        .withValues(alpha: 0.25),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -243,12 +242,12 @@ class _SuscripcionPremiumScreenState extends State<SuscripcionPremiumScreen>
                   borderRadius: BorderRadius.circular(12),
                   side: BorderSide(color: Colors.deepOrange.shade200),
                 ),
-                child: const Padding(
+                child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded( // <-- Envuelve la Column aquí
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
@@ -264,8 +263,8 @@ class _SuscripcionPremiumScreenState extends State<SuscripcionPremiumScreen>
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      const Text(
+                      SizedBox(width: 12),
+                      Text(
                         '\$4.990\nCLP/mes',
                         textAlign: TextAlign.right,
                         style: TextStyle(

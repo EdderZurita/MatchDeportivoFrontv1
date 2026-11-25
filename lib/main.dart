@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/admin_usuarios_screen.dart';
@@ -21,9 +22,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // Firebase (push) solo en Android/iOS. En web no hay FirebaseOptions
+  // configuradas y la inicializacion rompia el arranque (pantalla en blanco).
+  if (!kIsWeb) {
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
 
   runApp(const MatchDeportivoApp());
 }
@@ -88,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // RF-17: Configuración de permisos, registro de token FCM y recepción de alertas
   Future<void> _configurarNotificacionesPush() async {
+    if (kIsWeb) return; // push no disponible sin configuracion web de Firebase
     try {
       final messaging = FirebaseMessaging.instance;
 
@@ -99,11 +105,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
+        // ignore: deprecated_member_use
         final token = await messaging.getToken();
         if (token != null) {
           await ApiService.registrarTokenFCM(token);
         }
 
+        // ignore: deprecated_member_use
         messaging.onTokenRefresh.listen((nuevoToken) async {
           await ApiService.registrarTokenFCM(nuevoToken);
         });
@@ -265,15 +273,17 @@ class _HomeScreenState extends State<HomeScreen> {
         index: safeIndex,
         children: pages,
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton.extended(heroTag: 'fab_home_crear',
         backgroundColor: const Color(0xFF2E7D32),
         foregroundColor: Colors.white,
         onPressed: () async {
+          final scaffoldMessenger = ScaffoldMessenger.of(context);
+          final navigator = Navigator.of(context);
           final token = await ApiService.getAccessToken();
           if (!mounted) return;
 
           if (token == null || token.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
+            scaffoldMessenger.showSnackBar(
               const SnackBar(
                 content: Text('Debes iniciar sesión para publicar una actividad.'),
                 backgroundColor: Colors.redAccent,
@@ -283,10 +293,10 @@ class _HomeScreenState extends State<HomeScreen> {
             return;
           }
 
-          final creada = await Navigator.push(
-            context,
+          final creada = await navigator.push(
             MaterialPageRoute(builder: (_) => const CrearActividadScreen()),
           );
+          if (!mounted) return;
 
           if (creada == true) {
             _mapaKey.currentState?.cargarDatos();
@@ -1202,7 +1212,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 20),
         DropdownButtonFormField<String>(
-          value: _comunaSeleccionada,
+          initialValue: _comunaSeleccionada,
           decoration: const InputDecoration(
             labelText: 'Comuna Habitual',
             prefixIcon: Icon(Icons.location_on_outlined),
@@ -1217,7 +1227,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
-          value: _deporteFavorito,
+          initialValue: _deporteFavorito,
           decoration: const InputDecoration(
             labelText: 'Deporte Principal',
             prefixIcon: Icon(Icons.sports_soccer),

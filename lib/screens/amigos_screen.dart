@@ -363,7 +363,7 @@ class _AmigosScreenState extends State<AmigosScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButtonFormField<String>(
-                  value: motivoSeleccionado,
+                  initialValue: motivoSeleccionado,
                   isExpanded: true, // <-- Evita el desbordamiento horizontal
                   decoration: const InputDecoration(
                     labelText: 'Motivo del reporte',
@@ -419,14 +419,16 @@ class _AmigosScreenState extends State<AmigosScreen> {
                 foregroundColor: Colors.white,
               ),
               onPressed: () async {
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
+                final navigator = Navigator.of(ctx);
                 final res = await ApiService.reportarUsuario(
                   reportadoId: usuarioId,
                   motivo: motivoSeleccionado,
                   descripcion: descripcionCtrl.text.trim(),
                 );
                 if (!mounted) return;
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
+                navigator.pop();
+                scaffoldMessenger.showSnackBar(
                   SnackBar(
                     content: Text(res['detail'] ?? 'Reporte procesado'),
                     backgroundColor: res['exito'] == true ? Colors.green : Colors.red,
